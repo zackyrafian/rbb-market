@@ -1,6 +1,7 @@
 'use client';
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation";
+import Chat from "./components/Chat";
 
 export default function DashboardPage () { 
     const { data: session, status } = useSession();
@@ -17,6 +18,7 @@ export default function DashboardPage () {
     
     return ( 
         <div>
+            <Chat/>
             <h1 className="text-2xl font-bold">Dashboard</h1>
             <p>Welcome, {session.user?.name}</p>
         </div>

@@ -8,12 +8,31 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String?
-  username String @unique
-  email    String @unique
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  email    String  @unique
   password String
-  role     Role   @default(USER)
+  role     Role    @default(USER)
+
+  messagesSent     Message[] @relation("SentMessages")
+  messagesReceived Message[] @relation("ReceivedMessages")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  from      Int
+  to        Int
+  content   String
+  createdAt DateTime @default(now())
+
+  sender   User @relation("SentMessages", fields: [from], references: [id])
+  receiver User @relation("ReceivedMessages", fields: [to], references: [id])
+  @@map("messages")
+}
+
+model Category { 
+  id  Int @id @default(autoincrement())
+  name String
 }
 
 enum Role {

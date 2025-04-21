@@ -3,12 +3,12 @@ import Link from "next/link";
 
 const SideBar = () => {
     const { data: session } = useSession();
-
+    
     return (
         <div className="h-screen w-64 bg-white text-gray-900 p-6 border-r border-gray-200 flex flex-col">
             <div className="mb-10">
                 <p className="text-lg font-semibold">
-                    {session?.user?.name ? `Welcome, ${session.user.name}` : "Welcome, Guest"}
+                    {session?.user.username ? `Welcome, ${session.user.username}` : "Welcome, Guest"}
                 </p>
             </div>
             <ul className="space-y-4 text-base font-medium">
