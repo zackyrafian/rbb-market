@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/utils/prisma";
+import { db } from "@/utils/db";
+
 import argon2 from "argon2";
+
 
 export async function POST(request: NextRequest) {
     try {
@@ -13,20 +15,40 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const existingUser = await prisma.user.findUnique({
-            where: {username}
-        })
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) { 
+            return NextResponse.json(
+                { error: "Invalid email format" },
+                { status: 400 } 
+            )
+        }
+
+        if (password.length < 2) { 
+            return NextResponse.json(
+                { error: "Password must be at least 8 characters long"},
+                { status: 400 }
+            )
+        }
+
+        const existingUser = await db.user.findFirst({
+            where: {
+                OR: [
+                    { username },
+                    { email }
+                ]
+            }
+        });
 
         if (existingUser) { 
             return NextResponse.json(
-                {error: "Username already exists"}, 
+                {error: "Username  or email already exists"}, 
                 {status: 409}
             )
         }
 
         const hashedPassword = await argon2.hash(password);
 
-        const newUser = await prisma.user.create({
+        const newUser = await db.user.create({
             data: {
               username,
               email,
@@ -34,12 +56,16 @@ export async function POST(request: NextRequest) {
             },
           });
         return NextResponse.json(
-            {message: "User registered successfully", user: newUser},
+            {message: "User registered successfully", user: {id: newUser.id, username, email}},
             {status: 201}
         )
     } catch (error) {
+        return NextResponse.json(
+            {message: "User Failed register", error},
+            {status: 500}
+        )
 
     } finally {
-        await prisma.$disconnect();
+        await db.$disconnect();
     }
 }
