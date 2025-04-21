@@ -10,19 +10,15 @@ export default function DashboardPage () {
         return <div>Loading...</div>
     }
 
-    console.log(session?.user.id);
-
-
     if (!session) { 
         router.push('/login');
         return <div>You must be logged in to view this page.</div>;
     }
-
     
     return ( 
         <div>
             <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p>Welcome, {session.user.username}</p>
+            <p>Welcome, {session.user?.name}</p>
         </div>
     )
 }

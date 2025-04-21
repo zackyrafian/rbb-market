@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
 
       if (token && user) {
         user.id = typeof token.id === 'string' ? token.id : '';
-        user.name = token.name;
+        user.username = typeof token.username === 'string' ? token.username: '';
         user.email = typeof token.email === 'string' ? token.email : '';
       }
 
@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.name = user.username;
+        token.username = user.username;
         token.email = user.email;
       }
       return token;
