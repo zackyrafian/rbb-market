@@ -1,14 +1,16 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { FiMail } from "react-icons/fi";
+import { RiDashboardLine } from "react-icons/ri";
 
 const Navbar = () => {
     const { data: session } = useSession();
 
     return (
         <nav className="w-full h-16 bg-white border-b border-gray-200 px-6 flex items-center justify-between shadow-sm">
-            <div className="text-xl font-semibold text-gray-800">
-                 
+            <div className="flex item-center gap-2 text-xl font-black text-gray-800">
+            <RiDashboardLine className="text-2xl" /> 
+                Dashboard     
             </div>
             <div className="flex items-center gap-6">
                 <Link href="/messages" className="relative group">

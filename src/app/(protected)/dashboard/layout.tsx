@@ -6,7 +6,7 @@ import { Sidebar, Navbar } from "./components";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    // <html lang="en">
       <body>
         <SessionProvider>
           <div className="flex">
@@ -20,6 +20,5 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </div>
         </SessionProvider>
       </body>
-    </html>
   );
 }

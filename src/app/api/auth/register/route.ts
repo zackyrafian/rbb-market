@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        // TEMP 
         if (password.length < 2) { 
             return NextResponse.json(
                 { error: "Password must be at least 8 characters long"},

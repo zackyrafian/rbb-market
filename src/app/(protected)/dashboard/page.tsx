@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import Chat from "./components/Chat";
+import RecentActivity from "./components/RecentActivity";
 
 export default function DashboardPage () { 
     const { data: session, status } = useSession();
@@ -18,9 +19,11 @@ export default function DashboardPage () {
     
     return ( 
         <div>
-            <Chat/>
+            {/* <Chat/> */}
             <h1 className="text-2xl font-bold">Dashboard</h1>
             <p>Welcome, {session.user?.name}</p>
+
+            <RecentActivity/>
         </div>
     )
 }

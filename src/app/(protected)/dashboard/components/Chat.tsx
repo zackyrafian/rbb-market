@@ -1,16 +1,22 @@
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 const Chat = () => {
-  const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const { data: session } = useSession();
+
+  const userId = session?.user?.id;
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:8080/ws?user_id=' + from);
+    if (!userId) return;
+
+    const socket = new WebSocket(`ws://localhost:8080/ws?user_id=${userId}`);
+
     socket.onopen = () => {
-      console.log('Connected to WebSocket');
+      console.log('Connected to WebSocket as user', userId);
     };
 
     socket.onmessage = (event) => {
@@ -23,12 +29,12 @@ const Chat = () => {
     return () => {
       socket.close();
     };
-  }, [from]);
+  }, [userId]);
 
   const sendMessage = () => {
-    if (ws && message && from && to) {
+    if (ws && message && userId && to) {
       const msg = {
-        from: parseInt(from),
+        from: parseInt(userId),
         to: parseInt(to),
         content: message,
       };
@@ -38,18 +44,13 @@ const Chat = () => {
     }
   };
 
+  if (!session) return <p>Loading session...</p>;
+
   return (
     <div>
       <h1>Chat</h1>
       <div>
-        <label>
-          From (User ID):
-          <input
-            type="text"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-          />
-        </label>
+        <p>Logged in as: {userId}</p>
         <label>
           To (User ID):
           <input
